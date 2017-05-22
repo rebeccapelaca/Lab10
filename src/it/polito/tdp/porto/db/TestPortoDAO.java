@@ -20,7 +20,7 @@ public class TestPortoDAO {
 			System.out.println(p + "\n");
 		
 		System.out.println("DATI UN AUTORE E UN ARTICOLO, STAMPO TUTTI I COAUTORI (escluso l'autore dato, idAutore = 719, eprintid = 2497471) : \n");
-		for(Author autore : pd.getCoAutori(2497471, 719))
+		for(Author autore : pd.getCoAutori(2497471))
 			System.out.println(autore + "\n");
 	}
 }

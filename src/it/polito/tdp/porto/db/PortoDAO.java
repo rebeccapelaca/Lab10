@@ -12,67 +12,13 @@ import it.polito.tdp.porto.model.Paper;
 
 public class PortoDAO {
 
-	/*
-	 * Dato l'id ottengo l'autore.
-	 */
-	public Author getAutore(int id) {
-
-		final String sql = "SELECT * FROM author where id=?";
-
-		try {
-			Connection conn = DBConnect.getConnection();
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, id);
-
-			ResultSet rs = st.executeQuery();
-
-			if (rs.next()) {
-
-				Author autore = new Author(rs.getInt("id"), rs.getString("lastname"), rs.getString("firstname"));
-				return autore;
-			}
-
-			return null;
-
-		} catch (SQLException e) {
-			// e.printStackTrace();
-			throw new RuntimeException("Errore Db");
-		}
-	}
-
-	/*
-	 * Dato l'id ottengo l'articolo.
-	 */
-	public Paper getArticolo(int eprintid) {
-
-		final String sql = "SELECT * FROM paper where eprintid=?";
-
-		try {
-			Connection conn = DBConnect.getConnection();
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, eprintid);
-
-			ResultSet rs = st.executeQuery();
-
-			if (rs.next()) {
-				Paper paper = new Paper(rs.getInt("eprintid"), rs.getString("title"), rs.getString("issn"),
-						rs.getString("publication"), rs.getString("type"), rs.getString("types"));
-				return paper;
-			}
-
-			return null;
-
-		} catch (SQLException e) {
-			 e.printStackTrace();
-			throw new RuntimeException("Errore Db");
-		}
-	}
-
 	public List<Author> getAutori() {
 		
 		List<Author> autori = new ArrayList<Author>();
 		
-		final String sql = "SELECT * FROM author";
+		final String sql = "SELECT * " + 
+		                   "FROM author " +
+				           "ORDER BY lastname, firstname";
 
 		try {
 			Connection conn = DBConnect.getConnection();
@@ -129,19 +75,18 @@ public class PortoDAO {
 		}
 	}
 
-	public List<Author> getCoAutori(int eprintid, int authorid) {
+	public List<Author> getCoAutori(int eprintid) {
 		
 		List<Author> coAutori = new ArrayList<Author>();
 		
 		final String sql = "SELECT id, lastname, firstname " +
 				           "FROM creator, author " +
-				           "WHERE creator.authorid = author.id AND eprintid = ? AND authorid != ?";
+				           "WHERE creator.authorid = author.id AND eprintid = ?";
 
 		try {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setInt(1, eprintid);
-			st.setInt(2, authorid);
 
 			ResultSet rs = st.executeQuery();
 
